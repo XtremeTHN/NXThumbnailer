@@ -1,0 +1,7 @@
+/target
+.direnv
+*.nsp
+*.xci
+*.dat
+*.png
+*.jpg

@@ -1,0 +1,8 @@
+[package]
+name = "nxthumbnailer"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+image = { version = "0.25.10", default-features = false, features = ["jpeg", "png", "rayon"] }
+nxroms = { git = "https://github.com/XtremeTHN/RustNXRoms", features = ["glib"], version = "0.1.0" }
