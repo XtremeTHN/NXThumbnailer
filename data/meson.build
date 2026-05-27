@@ -1,11 +1,11 @@
-mime_types_out = get_option('prefix') / 'mime' / 'packages/'
-thumnailer_out = get_option('prefix') / 'thumbnailers'
+mime_types_out = get_option('prefix') / 'share' / 'mime' / 'packages/'
+thumnailer_out = get_option('prefix') / 'share' /'thumbnailers'
 
 install_data(
-    'nxroms.xml',
+    'nxthumbnail.xml',
     install_dir: mime_types_out,
 )
 install_data(
-    'nxroms.thumbnailer',
+    'nxthumbnail.thumbnailer',
     install_dir: thumnailer_out
 )

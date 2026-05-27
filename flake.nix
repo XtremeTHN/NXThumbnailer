@@ -41,8 +41,13 @@
 
       cargoDeps = pkgs.rustPlatform.fetchCargoVendor {
         inherit pname version src;
-        hash = "sha256-LdRTVfM4Ysn81QB1axUmbxmKrIqlev/zcjcOi6wVhtQ=";
+        hash = "sha256-NxhLf0Ewdb1dpSRx8gNdxe7rA3M1Zixp3ZebO9fewJA=";
       };
+
+      postInstall = ''
+        substituteInPlace $out/share/thumbnailers/nxthumbnail.thumbnailer \
+          --replace-fail '=nxthumbnail' "=$out/bin/nxthumbnail"
+      '';
 
       inherit nativeBuildInputs buildInputs;
     };

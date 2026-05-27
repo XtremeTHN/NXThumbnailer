@@ -1,3 +1,4 @@
 [Thumbnailer Entry]
+TryExec=nxthumbnail
 Exec=nxthumbnail -i %i -o %o -s %s
 MimeType=application/x-nintendo-switch-nsp;application/x-nintendo-switch-xci

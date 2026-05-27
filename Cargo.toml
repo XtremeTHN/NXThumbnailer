@@ -1,5 +1,5 @@
 [package]
-name = "nxthumbnailer"
+name = "nxthumbnail"
 version = "0.1.0"
 edition = "2024"
 
@@ -8,5 +8,5 @@ clap = { version = "4.6.1", features = ["derive"] }
 env_logger = "0.11.10"
 image = { version = "0.25.10", default-features = false, features = ["jpeg", "png", "rayon"] }
 log = "0.4.30"
-nxroms = { git = "https://github.com/XtremeTHN/RustNXRoms", features = ["glib"], version = "0.1.0" }
+nxroms = { git = "https://github.com/XtremeTHN/RustNXRoms", version = "0.1.0" }
 thiserror = "2.0.18"
