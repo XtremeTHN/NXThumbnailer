@@ -7,30 +7,24 @@
 
     nativeBuildInputs = with pkgs; [
       rustc
-      clippy
       cargo
       meson
       ninja
       pkg-config
-      wrapGAppsHook4
       rustPlatform.cargoSetupHook
     ];
 
-    buildInputs = with pkgs; [
-      gtk4
-      libadwaita
-    ];
-
-    pname = "htmlview";
+    pname = "nxthumbnail";
     version = "0.1.0";
     src = ./.;
   in {
     devShells.${system}.default = pkgs.mkShell {
-      inherit nativeBuildInputs buildInputs;
+      inherit nativeBuildInputs;
       RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
       
       packages = with pkgs; [
         rust-analyzer
+        clippy
         rustfmt
       ];
     };
@@ -49,7 +43,7 @@
           --replace-fail '=nxthumbnail' "=$out/bin/nxthumbnail"
       '';
 
-      inherit nativeBuildInputs buildInputs;
+      inherit nativeBuildInputs;
     };
   };
 }
