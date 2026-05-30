@@ -3,8 +3,8 @@ mod extractor;
 use std::fs::File;
 use std::path::PathBuf;
 use std::process::exit;
-use image::DynamicImage;
 use clap::Parser;
+use gio::prelude::FileExt;
 
 use crate::extractor::extract_icon;
 use nxroms::{formats::xci::{Xci, XciPartition}, fs::{hfs::HashPartitionFsHeader, pfs::{PartitionFs, PartitionFsHeader}}};
@@ -14,7 +14,7 @@ type AnyError<R> = Result<R, Box<dyn std::error::Error>>;
 #[derive(Parser)]
 struct Args {
     #[arg(short = 'i')]
-    pub input: PathBuf,
+    pub input: String,
 
     #[arg(short = 'o')]
     pub output: PathBuf,
@@ -37,13 +37,25 @@ enum RomType {
     Xci
 }
 
-fn validate_input(input: &PathBuf) -> RomType {
-    if !input.exists() {
+fn extract_pathbuf(file: &gio::File) -> PathBuf {
+    let p = file.path();
+    if p.is_none() {
+        log::error!("Couldn't get a path to file: {}", file.uri());
+        exit(10);
+    }
+
+    p.unwrap()
+}
+
+fn get_rom_type(input: &gio::File) -> RomType {
+    if !input.query_exists(None::<&gio::Cancellable>) {
         log::error!("Input file does not exist: {:?}", input);
         exit(1);
     }
 
-    let f = input.extension().and_then(|e| {
+
+    let path = extract_pathbuf(input);
+    let f = path.extension().and_then(|e| {
         if e == "nsp" {
             Some(RomType::Nsp)
         } else if e == "xci" {
@@ -55,7 +67,7 @@ fn validate_input(input: &PathBuf) -> RomType {
 
     if f.is_none() {
         log::error!("Input file has an invalid extension: {:?}", input);
-        exit(2);
+        exit(3);
     }
 
     f.unwrap()
@@ -72,8 +84,10 @@ fn extract_pfs_xci(file: &mut File) -> AnyError<PartitionFs<HashPartitionFsHeade
     Ok(xci.open_partition_fs(&mut raw_pfs)?)
 }
 
-fn process(args: &Args, rom_type: RomType) -> AnyError<()> {
-    let mut file = File::open(&args.input)?;
+fn process(args: &Args, file: gio::File, rom_type: RomType) -> AnyError<()> {
+    let input = extract_pathbuf(&file);
+    println!("{:?}", input);
+    let mut file = File::open(input)?;
     let img = match rom_type {
         RomType::Nsp => {
             extract_icon(extract_pfs_nsp(&mut file)?, &mut file)?
@@ -93,7 +107,6 @@ fn process(args: &Args, rom_type: RomType) -> AnyError<()> {
 
 fn main() {
     let args = Args::parse();
-
     let level = if args.verbose {
         "debug"
     } else {
@@ -106,9 +119,11 @@ fn main() {
         env_logger::init_from_env(env);
     }
 
-    let _type = validate_input(&args.input);
+    let file = gio::File::for_uri(&args.input);
 
-    if let Err(e) = process(&args, _type) {
+    let _type = get_rom_type(&file);
+
+    if let Err(e) = process(&args, file, _type) {
         log::error!("Failed to create rom thumbnail for file {:?}: {}", args.input, e);
         std::process::exit(2);
     };

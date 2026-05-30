@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
     <mime-type type="application/x-nintendo-switch-nsp">
-        <comment>Gamecard file system which starts with magicnum "PFS0". </comment>
+        <comment>Nintendo Submission Package</comment>
         <generic-icon name="image-x-generic"/>
         <glob pattern="*.nsp"/>
     </mime-type>
     <mime-type type="application/x-nintendo-switch-xci">
-        <comment>Format used for storing the contents of a Nintendo Switch Gamecard</comment>
+        <comment>NX Cartridge Image</comment>
         <generic-icon name="image-x-generic"/>
         <glob pattern="*.xci"/>
     </mime-type>
