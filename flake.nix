@@ -14,6 +14,10 @@
       rustPlatform.cargoSetupHook
     ];
 
+    buildInputs = with pkgs; [
+      glib
+    ];
+
     pname = "nxthumbnail";
     version = "0.1.0";
     src = ./.;
@@ -35,7 +39,7 @@
 
       cargoDeps = pkgs.rustPlatform.fetchCargoVendor {
         inherit pname version src;
-        hash = "sha256-NxhLf0Ewdb1dpSRx8gNdxe7rA3M1Zixp3ZebO9fewJA=";
+        hash = "sha256-Z+yvo4QN0anTmvWUrv4mVdEFyc8itu597TdbAxD9S2M=";
       };
 
       postInstall = ''
@@ -43,7 +47,7 @@
           --replace-fail '=nxthumbnail' "=$out/bin/nxthumbnail"
       '';
 
-      inherit nativeBuildInputs;
+      inherit nativeBuildInputs buildInputs;
     };
   };
 }
